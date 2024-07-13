@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Image</title>
+</head>
+<body>
+    <h1>View Image</h1>
+    <div>
+        <img src="{{ image_url }}" alt="Image" style="max-width: 800px;">
+    </div>
+    <div>
+        {% if prev_image_id is not None %}
+            <a href="{% url 'view_image' prev_image_id %}">Previous</a>
+        {% endif %}
+        {% if next_image_id is not None %}
+            <a href="{% url 'view_image' next_image_id %}">Next</a>
+        {% endif %}
+    </div>
+    <div>
+        <a href="{% url 'gallery' %}">Back to Gallery</a>
+    </div>
+</body>
+</html>
