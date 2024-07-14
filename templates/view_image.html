@@ -1,23 +1,174 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>View Image</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Просмотр исследований | Центр Дикуля</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Rubik:300,400,500,600%7CIBM+Plex+Sans:300,400,500,600,700" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Rubik', sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .image-viewer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0;
+            width: 100%;
+        }
+
+        .image-viewer img {
+            width: 100%;
+            max-width: 512px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Добавил тень */
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .navigation a {
+            padding: 10px 20px;
+            background-color: #2196F3;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .navigation a:hover {
+            background-color: #0b7dda;
+        }
+
+        .back-to-gallery {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .back-to-gallery a {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-to-gallery a:hover {
+            background-color: #45a049;
+        }
+
+        .arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            color: #2196F3;
+            background-color: white;
+            border-radius: 50%;
+            padding: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .arrow:hover {
+            background-color: #e0e0e0;
+        }
+
+        .arrow-left {
+            left: -40px;
+        }
+
+        .arrow-right {
+            right: -40px;
+        }
+
+        .thumbnail-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            overflow-x: auto;
+            width: 100%;
+        }
+
+        .thumbnail {
+            width: 100px;
+            height: 100px;
+            margin: 0 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .thumbnail:hover img {
+            transform: scale(1.1);
+            filter: brightness(0.7);
+        }
+    </style>
 </head>
 <body>
-    <h1>View Image</h1>
-    <div>
-        <img src="{{ image_url }}" alt="Image" style="max-width: 800px;">
-    </div>
-    <div>
-        {% if prev_image_id is not None %}
-            <a href="{% url 'view_image' prev_image_id %}">Previous</a>
-        {% endif %}
-        {% if next_image_id is not None %}
-            <a href="{% url 'view_image' next_image_id %}">Next</a>
-        {% endif %}
-    </div>
-    <div>
-        <a href="{% url 'gallery' %}">Back to Gallery</a>
+    <div class="container">
+        <div class="image-viewer">
+            <img src="{{ image_url }}" alt="Image">
+        </div>
+        <div class="navigation">
+            {% if prev_image_id is not None %}
+                <a href="{% url 'view_image' prev_image_id %}" class="arrow arrow-left">&larr;</a>
+            {% endif %}
+            {% if next_image_id is not None %}
+                <a href="{% url 'view_image' next_image_id %}" class="arrow arrow-right">&rarr;</a>
+            {% endif %}
+        </div>
+        <div class="thumbnail-container">
+            {% for thumb in thumbnails %}
+                <div class="thumbnail">
+                    <a href="{% url 'view_image' thumb.id %}">
+                        <img src="{{ thumb.url }}" alt="Thumbnail">
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="back-to-gallery">
+            <a href="{% url 'gallery' %}">Назад в галерею</a>
+        </div>
     </div>
 </body>
 </html>
