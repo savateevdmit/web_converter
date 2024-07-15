@@ -6,7 +6,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
     <link href="https://fonts.googleapis.com/css?family=Rubik:300,400,500,600%7CIBM+Plex+Sans:300,400,500,600,700" rel="stylesheet">
     <title>Просмотр исследований | Центр Дикуля</title>
-    <link rel="icon" type="image/png" href="ic.png">
+    {% load static %}
+    <link rel="icon" type="image/png" href="{% static 'images/ic.png' %}">
     <style>
         body {
             font-family: 'Rubik', sans-serif;
@@ -21,14 +22,29 @@
             width: 100%;
             display: flex;
             align-items: center;
-            justify-content: center;
             color: white;
             font-size: 24px;
+            position: relative;
+            padding-left: 100px; /* Добавил отступ слева для текста */
+        }
+
+        .blue-strip img {
+            position: absolute;
+            left: 34px;
+            height: 50px;
+        }
+
+         .info-text {
+            color: #666;
+            text-align: left;
+            margin: 50px 0px 1px 0px; /* Выровнял текст по левому краю и прижал к контейнеру */
+            font-size: 18px; /* Уменьшил размер текста */
+            padding-left: 32px; /* Добавил отступ слева */
         }
 
         .container {
             max-width: 1200px;
-            margin: 80px auto;
+            margin: 4px auto;
             padding: 20px;
             background-color: white;
             border-radius: 10px;
@@ -67,6 +83,7 @@
             border-radius: 10px;
             cursor: pointer;
             aspect-ratio: 1 / 1;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
         }
 
         .grid-item img {
@@ -135,7 +152,12 @@
     </style>
 </head>
 <body>
-    <div class="blue-strip">Галерея исследований</div>
+    <div class="blue-strip">
+        {% load static %}
+        <img src="{% static 'images/logo.png' %}" alt="Logo" >
+        Галерея исследований
+    </div>
+    <div class="info-text">🛈 Кликните по снимку, чтобы открыть его</div>
     <div class="container">
         <form method="post">
             {% csrf_token %}
@@ -153,7 +175,8 @@
     </div>
     <footer>
         <small>&copy; 2024 Московские центры Дикуля <br />
-            <i class='fa fa-github' style='font-size:20px'></i>
+            {% load static %}
+            <img src="{% static 'images/github.png' %}" alt="Logo" width="16" height="16">
              <a href="https://github.com/savateevdmit">GitHub • SavDi</a></small>
     </footer>
 </body>
