@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect
 from django.urls import path
 from django.views import View
 from django.core.wsgi import get_wsgi_application
-from test import conv
+from parser import conv
 
 # Проверяем, если настройки уже конфигурированы, тогда пропускаем
 if not settings.configured:
