@@ -1,17 +1,144 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Upload ZIP File</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Просмотр исследований | Центр Дикуля</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Rubik:300,400,500,600" rel="stylesheet">
+    {% load static %}
+    <link rel="icon" type="image/png" href="{% static 'images/ic.png' %}">
+    <style>
+        body {
+            font-family: 'Rubik', sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 90%;
+            width: 500px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transform: scale(1.1); /* Увеличение всей композиции */
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 24px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        input[type="file"] {
+            margin: 10px 0;
+            padding: 7px;
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        input[type="file"]:hover {
+            border-color: #4CAF50;
+        }
+
+        button {
+            padding: 15px 30px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            position: relative;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .loading {
+            display: none;
+            margin-top: 20px;
+            width: 30px;
+            height: 30px;
+            border: 3px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 3px solid #ccc;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            color: red;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                transform: none;
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            input[type="file"] {
+                padding: 5px;
+            }
+
+            button {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+
+            .loading {
+                width: 24px;
+                height: 24px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Upload ZIP File</h1>
-    {% if error %}
-        <p style="color: red;">{{ error }}</p>
-    {% endif %}
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <input type="file" name="zip_file" accept=".zip" required>
-        <button type="submit">Upload</button>
-    </form>
+    <div class="container">
+        <h1>Загрузите ZIP-архив</h1>
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+        <form method="post" enctype="multipart/form-data" onsubmit="showLoading()">
+            {% csrf_token %}
+            <input type="file" name="zip_file" accept=".zip" required>
+            <button type="submit">
+                Загрузить
+            </button>
+            <div class="loading" id="loading"></div>
+        </form>
+    </div>
+    <script>
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+        }
+    </script>
 </body>
 </html>

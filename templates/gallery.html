@@ -43,7 +43,7 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 2116px;
             margin: 4px auto;
             padding: 20px;
             background-color: white;
@@ -149,15 +149,56 @@
         footer a:hover {
             text-decoration: underline;
         }
+
+        @media (max-width: 600px) {
+            .blue-strip {
+                padding-left: 70px;
+                font-size: 20px;
+                height: 50px;
+            }
+
+            .blue-strip img {
+                left: 10px;
+                height: 40px;
+            }
+
+            .info-text {
+                font-size: 16px;
+                padding-left: 16px;
+                margin-top: 28px;
+            }
+
+            .container {
+                padding: 15px;
+                margin: 3px auto;
+            }
+
+            button {
+                padding: 8px 16px;
+            }
+
+            .grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 10px;
+            }
+
+            footer {
+                font-size: 12px;
+                padding: 5px 0;
+            }
+
+            footer small {
+                font-size: 12px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="blue-strip">
-        {% load static %}
-        <img src="{% static 'images/logo.png' %}" alt="Logo" >
+        <img src="{% static 'images/logo.png' %}" alt="Logo">
         Галерея исследований
     </div>
-    <div class="info-text">🛈 Кликните по снимку, чтобы открыть его</div>
+    <div class="info-text">ⓘ Кликните по снимку, чтобы открыть его</div>
     <div class="container">
         <form method="post">
             {% csrf_token %}
@@ -175,9 +216,9 @@
     </div>
     <footer>
         <small>&copy; 2024 Московские центры Дикуля <br />
-            {% load static %}
             <img src="{% static 'images/github.png' %}" alt="Logo" width="16" height="16">
-             <a href="https://github.com/savateevdmit">GitHub • SavDi</a></small>
+            <a href="https://github.com/savateevdmit">GitHub • SavDi</a>
+        </small>
     </footer>
 </body>
 </html>

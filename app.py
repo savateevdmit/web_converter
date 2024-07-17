@@ -1,5 +1,4 @@
 import os
-import shutil
 import zipfile
 from django.conf import settings
 from django.conf.urls.static import static
@@ -17,7 +16,15 @@ if not settings.configured:
     SECRET_KEY = 'your-secret-key'
     DEBUG = True
 
-    ALLOWED_HOSTS = []
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+    CSRF_TRUSTED_ORIGINS = []
+
+    # Добавляем ngrok URL в ALLOWED_HOSTS и CSRF_TRUSTED_ORIGINS
+    NGROK_HOST = 'd3ce-46-242-12-86.ngrok-free.app'
+    if NGROK_HOST:
+        ALLOWED_HOSTS.append(NGROK_HOST)
+        CSRF_TRUSTED_ORIGINS.append(f'https://{NGROK_HOST}')
+
     INSTALLED_APPS = [
         'django.contrib.staticfiles',
         'django.contrib.sessions',
@@ -40,7 +47,7 @@ if not settings.configured:
                 'context_processors': [
                     'django.template.context_processors.debug',
                     'django.template.context_processors.request',
-                    'django.template.context_processors.media',  # Добавляем media context processor
+                    'django.template.context_processors.media',
                 ],
             },
         },
@@ -68,6 +75,7 @@ if not settings.configured:
         SECRET_KEY=SECRET_KEY,
         DEBUG=DEBUG,
         ALLOWED_HOSTS=ALLOWED_HOSTS,
+        CSRF_TRUSTED_ORIGINS=CSRF_TRUSTED_ORIGINS,
         INSTALLED_APPS=INSTALLED_APPS,
         MIDDLEWARE=MIDDLEWARE,
         ROOT_URLCONF=ROOT_URLCONF,
@@ -79,6 +87,8 @@ if not settings.configured:
         MEDIA_ROOT=MEDIA_ROOT,
         DATABASES=DATABASES,
     )
+else:
+    print(1)
 
 class Image:
     def __init__(self, image):
@@ -92,14 +102,13 @@ class UploadZipView(View):
         if request.method == 'POST' and request.FILES['zip_file']:
             zip_file = request.FILES['zip_file']
             if not zip_file.name.endswith('.zip'):
-                return render(request, 'upload_zip.html', {'error': 'Please upload a valid ZIP file.'})
+                return render(request, 'upload_zip.html', {'error': 'Пожалуйста, загрузите ZIP файл.'})
 
             fs = FileSystemStorage()
             filename = fs.save(zip_file.name, zip_file)
             folder_name = os.path.splitext(filename)[0]
             file_path = fs.path(filename)
 
-            print(filename)
             folder_name = conv(filename)
             os.remove(f'media/{filename}')
 
@@ -114,7 +123,6 @@ class GalleryView(View):
             return redirect('upload_zip')
 
         images = []
-        print(folder_name)
         folder_path = os.path.join(settings.MEDIA_ROOT, folder_name)
         for file_name in os.listdir(folder_path):
             if file_name.endswith(('.png', '.jpg', '.jpeg')):
@@ -173,7 +181,7 @@ urlpatterns = [
     path('', UploadZipView.as_view(), name='upload_zip'),
     path('gallery/', GalleryView.as_view(), name='gallery'),
     path('image/<int:image_id>/', ViewImageView.as_view(), name='view_image'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 application = get_wsgi_application()
 
